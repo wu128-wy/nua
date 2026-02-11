@@ -262,10 +262,10 @@ async def debug_info():
     
     return info
 
-# ========= 聊天接口（使用NUA人格模块） =========
+# ========= 聊天接口（完整版：记住名字 + 时间问候 + 情绪感知） =========
 @app.post("/chat", response_model=ChatResponse)
 async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
-    """与NUA聊天 - 使用NUA人格模块"""
+    """与NUA聊天 - 支持记住名字、时间问候、情绪感知"""
     try:
         # 检查 DeepSeek 是否可用
         if not DEEPSEEK_AVAILABLE or client is None:
@@ -288,8 +288,27 @@ async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
         if len(user_history) > 8:
             user_history.pop(0)
         
-        # ===== 新增：判断用户情绪 =====
-        user_emotion = "平稳"  # 默认情绪
+        # ===== 新增：用户记忆管理（持久化） =====
+        user_memory_file = f"user_memory_{user_id}.json"
+        user_memory = {}
+        
+        # 读取已有的用户记忆
+        try:
+            if os.path.exists(user_memory_file):
+                with open(user_memory_file, "r", encoding="utf-8") as f:
+                    user_memory = json.load(f)
+                print(f"📖 读取用户{user_id}的记忆: {user_memory.get('name', '未记录')}")
+        except Exception as e:
+            print(f"⚠️ 读取用户记忆失败: {e}")
+        
+        # 更新最后访问时间
+        today = datetime.now().date().isoformat()
+        last_seen = user_memory.get("last_seen")
+        user_memory["last_seen"] = today
+        user_memory["user_id"] = user_id
+        
+        # ===== 判断用户情绪 =====
+        user_emotion = "平稳"
         
         # 开心关键词
         happy_words = ["开心", "喜欢", "好吃", "快乐", "高兴", "棒", "好棒", "爱", "幸福", "温暖", "好喝", "美味"]
@@ -301,17 +320,28 @@ async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
         if any(word in user_message for word in sad_words):
             user_emotion = "低落"
         
-        # ===== 新增：使用NUA人格模块生成回应 =====
+        # ===== 使用NUA人格模块生成回应 =====
         print(f"📨 用户{user_id}说: {user_message}")
         print(f"🎭 检测到的情绪: {user_emotion}")
+        print(f"👤 用户称呼: {user_memory.get('name', '未记录')}")
         
         try:
-            # 调用NUA人格模块
+            # 调用NUA人格模块（完整版：支持名字记忆和时间问候）
             nua_reply = generate_nua_response(
                 user_message=user_message,
                 user_emotion=user_emotion,
+                user_memory=user_memory,  # 传递用户记忆
                 nickname="多多"
             )
+            
+            # 保存更新后的用户记忆
+            try:
+                with open(user_memory_file, "w", encoding="utf-8") as f:
+                    json.dump(user_memory, f, ensure_ascii=False, indent=2)
+                print(f"💾 保存用户{user_id}的记忆")
+            except Exception as e:
+                print(f"⚠️ 保存用户记忆失败: {e}")
+                
         except Exception as e:
             print(f"⚠️ 人格模块调用失败，使用备用方案: {e}")
             # 备用方案：使用原有的prompt
@@ -327,6 +357,10 @@ async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
                 max_tokens=150
             )
             nua_reply = response.choices[0].message.content.strip()
+            
+            # 如果知道名字，在备用方案中也尝试使用
+            if user_memory.get('name'):
+                nua_reply = f"{user_memory['name']}，{nua_reply}"
         
         print(f"🤖 回复用户{user_id}: {nua_reply}")
         
@@ -396,7 +430,7 @@ async def health_check():
         "service": "NUA Chat",
         "version": "2.0",
         "deepseek_available": DEEPSEEK_AVAILABLE,
-        "features": ["独立对话", "后台日志", "贪吃爱玩性格", "情绪感知", "坚定守护"],
+        "features": ["独立对话", "后台日志", "贪吃爱玩性格", "情绪感知", "坚定守护", "记住名字", "时间问候"],
         "active_users": len(user_conversations),
         "log_file": LOG_FILE
     }
@@ -421,6 +455,7 @@ async def startup_event():
     try:
         import nua_personality
         print("✅ NUA人格模块加载成功")
+        print("✨ 功能支持: 记住名字 + 时间问候 + 情绪感知")
     except ImportError as e:
         print(f"⚠️ NUA人格模块加载失败: {e}")
     
