@@ -117,17 +117,147 @@ def get_user_history(user_id: str):
         user_conversations[user_id] = []
     return user_conversations[user_id]
 
-# ========= 主页路由 =========
+# ========= 修复：主页路由 =========
 def read_index_html():
+    """读取 index.html 文件 - Railway 专用版本"""
+    print("🔍 开始查找 index.html 文件...")
+    
+    # Railway 中的文件路径（重要！）
+    possible_paths = [
+        "/app/nua-chat/index.html",  # Railway 绝对路径
+        "nua-chat/index.html",       # 相对路径
+        "index.html",                 # 当前目录
+        "./index.html",               # 当前目录（另一种写法）
+    ]
+    
+    for path in possible_paths:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                content = f.read()
+                print(f"✅ 成功读取文件: {path}")
+                return content
+        except FileNotFoundError:
+            print(f"⚠️  未找到文件: {path}")
+            continue
+        except Exception as e:
+            print(f"❌ 读取错误 {path}: {e}")
+            continue
+    
+    # 如果都找不到，列出目录结构帮助调试
     try:
-        with open("index.html", "r", encoding="utf-8") as f:
-            return f.read()
-    except FileNotFoundError:
-        return "<h1>NUA · 多多</h1><p>index.html未找到</p>"
+        import os
+        current_dir = os.getcwd()
+        print(f"📁 当前工作目录: {current_dir}")
+        print(f"📁 当前目录内容: {os.listdir('.')}")
+        
+        if os.path.exists("nua-chat"):
+            print(f"📁 nua-chat 目录内容: {os.listdir('nua-chat')}")
+        else:
+            print("❌ nua-chat 目录不存在")
+    except Exception as e:
+        print(f"⚠️  无法列出目录: {e}")
+    
+    # 返回一个简单的错误页面
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>NUA · 多多 - 加载中</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                background: linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                text-align: center;
+            }
+            .container {
+                background: white;
+                padding: 40px;
+                border-radius: 24px;
+                box-shadow: 0 15px 50px rgba(66, 165, 245, 0.15);
+                max-width: 500px;
+            }
+            h1 {
+                color: #2c3e50;
+                margin-bottom: 20px;
+            }
+            p {
+                color: #546e7a;
+                line-height: 1.6;
+            }
+            .loading {
+                margin-top: 30px;
+                color: #4dabf7;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🍰 NUA · 多多</h1>
+            <p>正在加载精美界面...</p>
+            <p><small>如果长时间停留在此页面，可能需要检查文件配置</small></p>
+            <div class="loading">🌀 加载中...</div>
+        </div>
+        <script>
+            // 5秒后自动刷新
+            setTimeout(() => {
+                location.reload();
+            }, 5000);
+        </script>
+    </body>
+    </html>
+    """
 
 @app.get("/", response_class=HTMLResponse)
 async def home():
+    """主页 - 返回 index.html"""
     return HTMLResponse(content=read_index_html(), status_code=200)
+
+# ========= 调试路由 =========
+@app.get("/debug")
+async def debug_info():
+    """调试信息页面，帮助排查问题"""
+    import os
+    
+    info = {
+        "service": "NUA Chat",
+        "status": "running",
+        "deepseek_available": DEEPSEEK_AVAILABLE,
+        "current_directory": os.getcwd(),
+        "files_in_current_dir": [],
+        "nua_chat_exists": False,
+        "index_html_exists": False,
+        "index_html_paths_tested": [
+            "/app/nua-chat/index.html",
+            "nua-chat/index.html", 
+            "index.html",
+            "./index.html"
+        ]
+    }
+    
+    try:
+        info["files_in_current_dir"] = os.listdir(".")
+        info["nua_chat_exists"] = os.path.exists("nua-chat")
+        
+        # 检查各种可能的路径
+        for path in info["index_html_paths_tested"]:
+            if os.path.exists(path):
+                info["index_html_exists"] = True
+                info["found_at"] = path
+                break
+                
+        if os.path.exists("nua-chat"):
+            info["nua_chat_contents"] = os.listdir("nua-chat")
+            
+    except Exception as e:
+        info["error"] = str(e)
+    
+    return info
 
 # ========= 聊天接口 =========
 @app.post("/chat", response_model=ChatResponse)
@@ -257,13 +387,23 @@ async def download_logs():
 @app.on_event("startup")
 async def startup_event():
     """启动时检查"""
-    if not os.path.exists("index.html"):
-        print("⚠️  警告: index.html文件不存在")
-    else:
-        print("✅ index.html文件存在")
-    
-    print("🚀 NUA聊天服务已启动")
-    print(f"📊 日志文件: {LOG_FILE}")
+    print("🚀 NUA聊天服务启动中...")
     print(f"🔑 DeepSeek 可用: {DEEPSEEK_AVAILABLE}")
+    print(f"📊 日志文件: {LOG_FILE}")
+    
+    # 检查文件路径
+    import os
+    current_dir = os.getcwd()
+    print(f"📁 当前工作目录: {current_dir}")
+    
+    # 列出文件
+    try:
+        print(f"📁 当前目录内容: {os.listdir('.')}")
+        if os.path.exists("nua-chat"):
+            print(f"📁 nua-chat 目录内容: {os.listdir('nua-chat')}")
+    except Exception as e:
+        print(f"⚠️  无法列出目录: {e}")
+    
     print("👥 每个人有独立的对话记忆")
     print("👑 管理员可访问 /admin/logs 查看所有对话")
+    print("✅ 服务启动完成！")
