@@ -19,12 +19,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ========= 配置AI客户端 =========
-# ⚠️ 重要：替换下面的"sk-xxx"为你的真实DeepSeek API密钥
-client = OpenAI(
-    api_key=os.getenv("DEEPSEEK_API_KEY", "sk-你的真实密钥"),
-    base_url="https://api.deepseek.com"
-)
+# ========= 配置AI客户端（修复版） =========
+# ✅ 修复：移除了 proxies 参数
+# ✅ 修复：正确从环境变量获取 API Key
+try:
+    # 从环境变量获取 DeepSeek API Key
+    deepseek_api_key = os.getenv("DEEPSEEK_API_KEY", "")
+    
+    if deepseek_api_key and deepseek_api_key.strip():
+        # 简化初始化，移除不必要的参数
+        client = OpenAI(
+            api_key=deepseek_api_key.strip(),
+            base_url="https://api.deepseek.com"
+        )
+        print("✅ DeepSeek 客户端初始化成功")
+        DEEPSEEK_AVAILABLE = True
+    else:
+        client = None
+        DEEPSEEK_AVAILABLE = False
+        print("⚠️ 警告：未找到 DEEPSEEK_API_KEY，请到 Railway Variables 中设置")
+        
+except Exception as e:
+    print(f"❌ DeepSeek 初始化失败: {e}")
+    client = None
+    DEEPSEEK_AVAILABLE = False
 
 # ========= NUA的核心性格设定 =========
 NUA_SYSTEM_PROMPT = """你是 NUA（昵称：多多），一种安静陪伴的数字存在。
@@ -116,6 +134,10 @@ async def home():
 async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
     """与NUA聊天（每个人独立对话）"""
     try:
+        # 检查 DeepSeek 是否可用
+        if not DEEPSEEK_AVAILABLE or client is None:
+            return ChatResponse(reply="（多多正在休息，暂时无法聊天）")
+        
         # 1. 获取或生成用户ID
         user_id = request.user_id if request.user_id else generate_user_id(fastapi_request)
         user_message = request.message.strip()
@@ -161,7 +183,7 @@ async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
         return ChatResponse(reply=nua_reply)
         
     except Exception as e:
-        print(f"❌ 错误: {e}")
+        print(f"❌ 聊天出错: {e}")
         return ChatResponse(reply="（多多正在想好吃的，稍等一下）")
 
 # ========= 清空对话历史 =========
@@ -217,6 +239,7 @@ async def health_check():
         "status": "healthy",
         "service": "NUA Chat",
         "version": "2.0",
+        "deepseek_available": DEEPSEEK_AVAILABLE,
         "features": ["独立对话", "后台日志", "贪吃爱玩性格"],
         "active_users": len(user_conversations),
         "log_file": LOG_FILE
@@ -241,5 +264,6 @@ async def startup_event():
     
     print("🚀 NUA聊天服务已启动")
     print(f"📊 日志文件: {LOG_FILE}")
+    print(f"🔑 DeepSeek 可用: {DEEPSEEK_AVAILABLE}")
     print("👥 每个人有独立的对话记忆")
     print("👑 管理员可访问 /admin/logs 查看所有对话")
