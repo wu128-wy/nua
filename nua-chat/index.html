@@ -699,5 +699,532 @@
             });
         }, 100);
     </script>
+    <!-- ===== 想你时的小黄狗（预览版） ===== -->
+<style>
+    /* 小狗容器 - 初始隐藏 */
+    .dog-container {
+        position: fixed;
+        bottom: -200px;
+        right: 30px;
+        width: 140px;
+        height: 180px;
+        z-index: 9998;
+        transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+    }
+    
+    /* 小狗出现动画 */
+    .dog-show {
+        bottom: 30px !important;
+        animation: dogFloat 3s ease-in-out infinite;
+    }
+    
+    /* 小狗身体（毛茸茸效果） */
+    .dog-body {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60%;
+        background: #FFB300;
+        border-radius: 50% 50% 40% 40%;
+        box-shadow: 
+            inset 0 -10px 20px rgba(255, 193, 7, 0.3),
+            0 5px 25px rgba(255, 179, 0, 0.4);
+        filter: blur(1px);
+        z-index: 2;
+    }
+    
+    /* 毛茸茸边缘效果 */
+    .dog-body::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: radial-gradient(circle at 30% 30%, #FFD54F 2px, transparent 3px),
+                   radial-gradient(circle at 70% 20%, #FFD54F 2px, transparent 3px),
+                   radial-gradient(circle at 40% 70%, #FFD54F 2px, transparent 3px);
+        background-size: 20px 20px;
+        border-radius: inherit;
+        z-index: -1;
+        opacity: 0.3;
+    }
+    
+    /* 小狗头 */
+    .dog-head {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 80px;
+        background: #FFB300;
+        border-radius: 50%;
+        box-shadow: 
+            inset 0 -5px 15px rgba(255, 193, 7, 0.3),
+            0 3px 15px rgba(255, 179, 0, 0.3);
+        filter: blur(1px);
+        z-index: 3;
+    }
+    
+    /* 毛茸茸头效果 */
+    .dog-head::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        background: radial-gradient(circle at 30% 30%, #FFD54F 3px, transparent 4px),
+                   radial-gradient(circle at 70% 30%, #FFD54F 3px, transparent 4px);
+        background-size: 25px 25px;
+        border-radius: inherit;
+        z-index: -1;
+        opacity: 0.4;
+    }
+    
+    /* 小狗耳朵 */
+    .dog-ear {
+        position: absolute;
+        top: -15px;
+        width: 35px;
+        height: 45px;
+        background: #FF8F00;
+        border-radius: 50% 50% 30% 30%;
+        box-shadow: inset 0 5px 10px rgba(255, 145, 0, 0.5);
+    }
+    
+    .dog-ear.left {
+        left: 5px;
+        transform: rotate(-25deg);
+    }
+    
+    .dog-ear.right {
+        right: 5px;
+        transform: rotate(25deg);
+    }
+    
+    /* 小狗眼睛 */
+    .dog-eye {
+        position: absolute;
+        top: 30px;
+        width: 14px;
+        height: 14px;
+        background: #5D4037;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(93, 64, 55, 0.5);
+    }
+    
+    .dog-eye.left {
+        left: 20px;
+    }
+    
+    .dog-eye.right {
+        right: 20px;
+    }
+    
+    /* 眼睛高光 */
+    .dog-eye::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 5px;
+        height: 5px;
+        background: white;
+        border-radius: 50%;
+    }
+    
+    /* 小狗鼻子 */
+    .dog-nose {
+        position: absolute;
+        top: 45px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 18px;
+        height: 12px;
+        background: #5D4037;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    /* 小狗舌头（流口水状态） */
+    .dog-tongue {
+        position: absolute;
+        top: 58px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 15px;
+        background: #FF6B8B;
+        border-radius: 0 0 50% 50%;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    /* 小狗尾巴 */
+    .dog-tail {
+        position: absolute;
+        bottom: 45px;
+        left: -25px;
+        width: 50px;
+        height: 18px;
+        background: #FF8F00;
+        border-radius: 50%;
+        transform-origin: right center;
+        animation: tailWag 0.8s infinite alternate;
+        box-shadow: inset 0 3px 10px rgba(255, 145, 0, 0.4);
+    }
+    
+    /* 小狗腿 */
+    .dog-leg {
+        position: absolute;
+        bottom: -12px;
+        width: 22px;
+        height: 35px;
+        background: #FF8F00;
+        border-radius: 50%;
+        box-shadow: inset 0 3px 10px rgba(255, 145, 0, 0.4);
+    }
+    
+    .dog-leg.front-left { left: 28px; }
+    .dog-leg.front-right { right: 28px; }
+    .dog-leg.back-left { left: 18px; }
+    .dog-leg.back-right { right: 18px; }
+    
+    /* 爱心效果 */
+    .dog-heart {
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 30px;
+        color: #FF6B8B;
+        opacity: 0;
+        pointer-events: none;
+        filter: drop-shadow(0 5px 10px rgba(255, 107, 139, 0.5));
+    }
+    
+    .heart-animate {
+        animation: heartFloat 1.5s ease-out forwards;
+    }
+    
+    /* 心情指示器 */
+    .dog-mood {
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        color: #FF8F00;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        opacity: 0;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+        border: 2px solid #FFD54F;
+    }
+    
+    .mood-show {
+        opacity: 1;
+    }
+    
+    /* 天气装饰 */
+    .dog-weather {
+        position: absolute;
+        top: -90px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 24px;
+        opacity: 0.7;
+    }
+    
+    /* 动画 */
+    @keyframes dogFloat {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        25% { transform: translateY(-8px) rotate(-3deg); }
+        75% { transform: translateY(-8px) rotate(3deg); }
+    }
+    
+    @keyframes tailWag {
+        0% { transform: rotate(-30deg); }
+        100% { transform: rotate(30deg); }
+    }
+    
+    @keyframes heartFloat {
+        0% { 
+            opacity: 0; 
+            transform: translateX(-50%) translateY(0) scale(0.3); 
+        }
+        20% { 
+            opacity: 1; 
+            transform: translateX(-50%) translateY(-20px) scale(1); 
+        }
+        100% { 
+            opacity: 0; 
+            transform: translateX(-50%) translateY(-80px) scale(0.5); 
+        }
+    }
+    
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .dog-container {
+            right: 15px;
+            width: 120px;
+            height: 150px;
+        }
+        
+        .dog-show {
+            bottom: 20px !important;
+        }
+    }
+</style>
+
+<!-- 小狗HTML结构 -->
+<div class="dog-container" id="dogContainer">
+    <div class="dog-weather" id="dogWeather">☀️</div>
+    <div class="dog-mood" id="dogMood">开心～</div>
+    <div class="dog-heart" id="dogHeart">💗</div>
+    
+    <div class="dog-tail"></div>
+    <div class="dog-body"></div>
+    <div class="dog-head">
+        <div class="dog-ear left"></div>
+        <div class="dog-ear right"></div>
+        <div class="dog-eye left"></div>
+        <div class="dog-eye right"></div>
+        <div class="dog-nose"></div>
+        <div class="dog-tongue" id="dogTongue"></div>
+    </div>
+    <div class="dog-leg front-left"></div>
+    <div class="dog-leg front-right"></div>
+    <div class="dog-leg back-left"></div>
+    <div class="dog-leg back-right"></div>
+</div>
+
+<script>
+    // ===== 小黄狗功能 =====
+    const dogContainer = document.getElementById('dogContainer');
+    const dogHeart = document.getElementById('dogHeart');
+    const dogMood = document.getElementById('dogMood');
+    const dogTongue = document.getElementById('dogTongue');
+    const dogWeather = document.getElementById('dogWeather');
+    const messageInput = document.getElementById('messageInput');
+    
+    // 小狗状态
+    let dogVisible = false;
+    let currentMood = 'happy'; // happy, hungry, rainy
+    
+    // 心情配置
+    const moods = {
+        happy: {
+            text: '开心～',
+            color: '#FFB300',
+            weather: '☀️'
+        },
+        hungry: {
+            text: '想吃好吃的！',
+            color: '#FF8F00',
+            weather: '🍰'
+        },
+        rainy: {
+            text: '需要伞伞...',
+            color: '#90A4AE',
+            weather: '🌧️'
+        }
+    };
+    
+    // 检测输入"想你"
+    let originalSendMessage = window.sendMessage;
+    window.sendMessage = function() {
+        const message = messageInput.value.trim();
+        
+        // 先调用原来的发送函数
+        if (originalSendMessage) {
+            originalSendMessage();
+        }
+        
+        // 检测是否包含"想你"
+        if (message && message.includes('想你')) {
+            showDog();
+            setMood('happy');
+            showMoodMessage('汪汪！我也想你！', 3000);
+        }
+        
+        // 检测食物关键词
+        const foodKeywords = ['吃', '饿', '美食', '蛋糕', '零食', '饭', '肉'];
+        if (foodKeywords.some(keyword => message.includes(keyword))) {
+            if (dogVisible) {
+                setMood('hungry');
+                dogTongue.style.opacity = '1';
+                showMoodMessage('流口水了...想吃！', 2000);
+                setTimeout(() => {
+                    dogTongue.style.opacity = '0';
+                }, 2000);
+            }
+        }
+    };
+    
+    // 显示小狗
+    function showDog() {
+        if (dogVisible) return;
+        
+        dogVisible = true;
+        dogContainer.classList.add('dog-show');
+        
+        // 设置初始心情（根据时间）
+        const hour = new Date().getHours();
+        if (hour >= 18 || hour < 6) {
+            setMood('rainy');
+        } else {
+            setMood('happy');
+        }
+        
+        console.log('🐕 小黄狗出现啦！');
+    }
+    
+    // 隐藏小狗
+    function hideDog() {
+        dogVisible = false;
+        dogContainer.classList.remove('dog-show');
+    }
+    
+    // 设置心情
+    function setMood(moodType) {
+        if (!moods[moodType]) return;
+        
+        currentMood = moodType;
+        const mood = moods[moodType];
+        
+        dogMood.textContent = mood.text;
+        dogMood.style.color = mood.color;
+        dogMood.style.borderColor = mood.color;
+        dogWeather.textContent = mood.weather;
+        
+        // 更新小狗颜色
+        document.querySelectorAll('.dog-body, .dog-head, .dog-ear, .dog-tail, .dog-leg').forEach(el => {
+            if (moodType === 'rainy') {
+                el.style.background = '#90A4AE';
+            } else {
+                el.style.background = mood.color;
+            }
+        });
+    }
+    
+    // 显示心情消息
+    function showMoodMessage(message, duration = 2000) {
+        dogMood.textContent = message;
+        dogMood.classList.add('mood-show');
+        
+        setTimeout(() => {
+            dogMood.classList.remove('mood-show');
+            // 恢复原来的心情
+            setTimeout(() => {
+                dogMood.textContent = moods[currentMood].text;
+            }, 300);
+        }, duration);
+    }
+    
+    // 点击小狗出现爱心
+    dogContainer.addEventListener('click', function(e) {
+        if (!dogVisible) return;
+        
+        // 创建爱心
+        dogHeart.textContent = '💗';
+        dogHeart.classList.remove('heart-animate');
+        void dogHeart.offsetWidth; // 触发重绘
+        dogHeart.classList.add('heart-animate');
+        
+        // 显示点击反馈
+        const clickMessages = [
+            '汪汪！',
+            '蹭蹭你～',
+            '摸摸头！',
+            '好开心！',
+            '带我玩！'
+        ];
+        const randomMessage = clickMessages[Math.floor(Math.random() * clickMessages.length)];
+        showMoodMessage(randomMessage, 1500);
+        
+        // 点击动画
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 200);
+    });
+    
+    // 鼠标跟随效果（轻轻跟随）
+    document.addEventListener('mousemove', function(e) {
+        if (!dogVisible) return;
+        
+        const dogRect = dogContainer.getBoundingClientRect();
+        const dogCenterX = dogRect.left + dogRect.width / 2;
+        const dogCenterY = dogRect.top + dogRect.height / 2;
+        
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        
+        // 计算距离
+        const distance = Math.sqrt(
+            Math.pow(mouseX - dogCenterX, 2) + 
+            Math.pow(mouseY - dogCenterY, 2)
+        );
+        
+        // 如果鼠标靠近小狗，小狗会轻微看向鼠标
+        if (distance < 200) {
+            const angle = Math.atan2(mouseY - dogCenterY, mouseX - dogCenterX);
+            const eyeOffset = Math.min(distance / 50, 5);
+            
+            document.querySelector('.dog-eye.left').style.transform = `translateX(${Math.cos(angle) * eyeOffset}px)`;
+            document.querySelector('.dog-eye.right').style.transform = `translateX(${Math.cos(angle) * eyeOffset}px)`;
+        } else {
+            // 恢复原位
+            document.querySelector('.dog-eye.left').style.transform = '';
+            document.querySelector('.dog-eye.right').style.transform = '';
+        }
+    });
+    
+    // 天气模拟（简单版）
+    function updateWeather() {
+        const hour = new Date().getHours();
+        
+        if (hour >= 6 && hour < 18) {
+            // 白天：大部分晴天
+            if (Math.random() > 0.7) {
+                setMood('rainy');
+            } else {
+                setMood('happy');
+            }
+        } else {
+            // 晚上：可能下雨
+            if (Math.random() > 0.5) {
+                setMood('rainy');
+            } else {
+                setMood('happy');
+            }
+        }
+    }
+    
+    // 初始化
+    window.addEventListener('load', function() {
+        // 每30分钟更新一次天气
+        updateWeather();
+        setInterval(updateWeather, 30 * 60 * 1000);
+        
+        // 测试：2分钟后自动显示小狗（第一次访问）
+        setTimeout(() => {
+            if (!dogVisible && Math.random() > 0.5) {
+                showDog();
+                showMoodMessage('初次见面，请多关照！', 2000);
+            }
+        }, 2 * 60 * 1000);
+        
+        console.log('🐕 小黄狗系统加载完成！');
+    });
+</script>
 </body>
+
 </html>
