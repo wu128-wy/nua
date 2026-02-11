@@ -462,6 +462,270 @@
             color: #666;
             z-index: 1000;
         }
+        
+        /* ===== 小黄狗样式 ===== */
+        .dog-container {
+            position: fixed;
+            bottom: -200px;
+            right: 30px;
+            width: 140px;
+            height: 180px;
+            z-index: 9998;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        
+        .dog-show {
+            bottom: 30px !important;
+            animation: dogFloat 3s ease-in-out infinite;
+        }
+        
+        .dog-body {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60%;
+            background: #FFB300;
+            border-radius: 50% 50% 40% 40%;
+            box-shadow: 
+                inset 0 -10px 20px rgba(255, 193, 7, 0.3),
+                0 5px 25px rgba(255, 179, 0, 0.4);
+            filter: blur(1px);
+            z-index: 2;
+        }
+        
+        .dog-body::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: radial-gradient(circle at 30% 30%, #FFD54F 2px, transparent 3px),
+                       radial-gradient(circle at 70% 20%, #FFD54F 2px, transparent 3px),
+                       radial-gradient(circle at 40% 70%, #FFD54F 2px, transparent 3px);
+            background-size: 20px 20px;
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .dog-head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: #FFB300;
+            border-radius: 50%;
+            box-shadow: 
+                inset 0 -5px 15px rgba(255, 193, 7, 0.3),
+                0 3px 15px rgba(255, 179, 0, 0.3);
+            filter: blur(1px);
+            z-index: 3;
+        }
+        
+        .dog-head::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            background: radial-gradient(circle at 30% 30%, #FFD54F 3px, transparent 4px),
+                       radial-gradient(circle at 70% 30%, #FFD54F 3px, transparent 4px);
+            background-size: 25px 25px;
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0.4;
+        }
+        
+        .dog-ear {
+            position: absolute;
+            top: -15px;
+            width: 35px;
+            height: 45px;
+            background: #FF8F00;
+            border-radius: 50% 50% 30% 30%;
+            box-shadow: inset 0 5px 10px rgba(255, 145, 0, 0.5);
+        }
+        
+        .dog-ear.left {
+            left: 5px;
+            transform: rotate(-25deg);
+        }
+        
+        .dog-ear.right {
+            right: 5px;
+            transform: rotate(25deg);
+        }
+        
+        .dog-eye {
+            position: absolute;
+            top: 30px;
+            width: 14px;
+            height: 14px;
+            background: #5D4037;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(93, 64, 55, 0.5);
+        }
+        
+        .dog-eye.left {
+            left: 20px;
+        }
+        
+        .dog-eye.right {
+            right: 20px;
+        }
+        
+        .dog-eye::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .dog-nose {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 12px;
+            background: #5D4037;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .dog-tongue {
+            position: absolute;
+            top: 58px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 15px;
+            background: #FF6B8B;
+            border-radius: 0 0 50% 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .dog-tail {
+            position: absolute;
+            bottom: 45px;
+            left: -25px;
+            width: 50px;
+            height: 18px;
+            background: #FF8F00;
+            border-radius: 50%;
+            transform-origin: right center;
+            animation: tailWag 0.8s infinite alternate;
+            box-shadow: inset 0 3px 10px rgba(255, 145, 0, 0.4);
+        }
+        
+        .dog-leg {
+            position: absolute;
+            bottom: -12px;
+            width: 22px;
+            height: 35px;
+            background: #FF8F00;
+            border-radius: 50%;
+            box-shadow: inset 0 3px 10px rgba(255, 145, 0, 0.4);
+        }
+        
+        .dog-leg.front-left { left: 28px; }
+        .dog-leg.front-right { right: 28px; }
+        .dog-leg.back-left { left: 18px; }
+        .dog-leg.back-right { right: 18px; }
+        
+        .dog-heart {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            color: #FF6B8B;
+            opacity: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 5px 10px rgba(255, 107, 139, 0.5));
+        }
+        
+        .heart-animate {
+            animation: heartFloat 1.5s ease-out forwards;
+        }
+        
+        .dog-mood {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #FF8F00;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+            border: 2px solid #FFD54F;
+        }
+        
+        .mood-show {
+            opacity: 1;
+        }
+        
+        .dog-weather {
+            position: absolute;
+            top: -90px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            opacity: 0.7;
+        }
+        
+        @keyframes dogFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-3deg); }
+            75% { transform: translateY(-8px) rotate(3deg); }
+        }
+        
+        @keyframes tailWag {
+            0% { transform: rotate(-30deg); }
+            100% { transform: rotate(30deg); }
+        }
+        
+        @keyframes heartFloat {
+            0% { 
+                opacity: 0; 
+                transform: translateX(-50%) translateY(0) scale(0.3); 
+            }
+            20% { 
+                opacity: 1; 
+                transform: translateX(-50%) translateY(-20px) scale(1); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateX(-50%) translateY(-80px) scale(0.5); 
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dog-container {
+                right: 15px;
+                width: 120px;
+                height: 150px;
+            }
+            
+            .dog-show {
+                bottom: 20px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -507,46 +771,50 @@
         <!-- 输入区域 -->
         <div class="input-area">
             <input type="text" id="messageInput" placeholder="在这里输入你的话语..." autofocus>
-            <button id="sendButton" onclick="sendMessage()">发送</button>
-            <button id="clearButton" onclick="clearChat()">清空</button>
+            <button id="sendButton">发送</button>
+            <button id="clearButton">清空</button>
         </div>
     </div>
 
+    <!-- 小狗HTML结构 -->
+    <div class="dog-container" id="dogContainer">
+        <div class="dog-weather" id="dogWeather">☀️</div>
+        <div class="dog-mood" id="dogMood">开心～</div>
+        <div class="dog-heart" id="dogHeart">💗</div>
+        
+        <div class="dog-tail"></div>
+        <div class="dog-body"></div>
+        <div class="dog-head">
+            <div class="dog-ear left"></div>
+            <div class="dog-ear right"></div>
+            <div class="dog-eye left"></div>
+            <div class="dog-eye right"></div>
+            <div class="dog-nose"></div>
+            <div class="dog-tongue" id="dogTongue"></div>
+        </div>
+        <div class="dog-leg front-left"></div>
+        <div class="dog-leg front-right"></div>
+        <div class="dog-leg back-left"></div>
+        <div class="dog-leg back-right"></div>
+    </div>
+
     <script>
-        // ===== 全局变量 =====
+        // ===== 核心变量 =====
         const chatContainer = document.getElementById('chatContainer');
         const messageInput = document.getElementById('messageInput');
         const typingIndicator = document.getElementById('typingIndicator');
         const userIdDisplay = document.getElementById('userIdDisplay');
+        const sendButton = document.getElementById('sendButton');
+        const clearButton = document.getElementById('clearButton');
         
         // ===== 用户ID管理 =====
         let userId = localStorage.getItem('nua_user_id');
         if (!userId) {
-            // 生成新用户ID：时间戳 + 随机字符串
             userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('nua_user_id', userId);
             console.log('👤 新用户ID:', userId);
         }
-        
-        // 显示用户ID（调试用）
         userIdDisplay.textContent = 'ID: ' + userId.substring(0, 12) + '...';
-        
-        // ===== 添加消息到聊天框 =====
-        function addUserMessage(content) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message user-message';
-            messageDiv.innerHTML = `<div class="message-content">${escapeHtml(content)}</div>`;
-            chatContainer.appendChild(messageDiv);
-            scrollToBottom();
-        }
-        
-        function addNuaMessage(content) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message nua-message';
-            messageDiv.innerHTML = `<div class="message-content">${escapeHtml(content)}</div>`;
-            chatContainer.appendChild(messageDiv);
-            scrollToBottom();
-        }
         
         // ===== 工具函数 =====
         function scrollToBottom() {
@@ -564,17 +832,36 @@
             typingIndicator.style.display = 'none';
         }
         
-        // 防止XSS攻击
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
         
-        // ===== 核心功能：发送消息 =====
-        async function sendMessage() {
+        // ===== 消息功能 =====
+        function addUserMessage(content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.innerHTML = `<div class="message-content">${escapeHtml(content)}</div>`;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        function addNuaMessage(content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message nua-message';
+            messageDiv.innerHTML = `<div class="message-content">${escapeHtml(content)}</div>`;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        // ===== 核心发送功能 =====
+        async function sendChatMessage() {
             const message = messageInput.value.trim();
             if (!message) return;
+            
+            // 保存消息用于小狗检测
+            window.lastUserMessage = message;
             
             // 清空输入框
             messageInput.value = '';
@@ -586,7 +873,6 @@
             showTypingIndicator();
             
             try {
-                // 发送请求到后端，包含用户ID
                 const response = await fetch('/chat', {
                     method: 'POST',
                     headers: {
@@ -594,7 +880,7 @@
                     },
                     body: JSON.stringify({
                         message: message,
-                        user_id: userId  // 重要：发送用户ID
+                        user_id: userId
                     })
                 });
                 
@@ -621,7 +907,6 @@
         async function clearChat() {
             if (!confirm('确定要清空当前对话吗？这不会影响其他人。')) return;
             
-            // 保留欢迎消息，清空其他消息
             const messages = document.querySelectorAll('.message:not(.nua-message)');
             messages.forEach(msg => {
                 if (!msg.closest('.welcome-message')) {
@@ -629,14 +914,12 @@
                 }
             });
             
-            // 清空NUA的消息
             document.querySelectorAll('.nua-message').forEach(msg => {
                 if (!msg.closest('.welcome-message')) {
                     msg.remove();
                 }
             });
             
-            // 发送清空请求到后端（只清空当前用户的对话）
             try {
                 await fetch('/clear', {
                     method: 'POST',
@@ -644,12 +927,10 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        user_id: userId  // 重要：指定清空哪个用户
+                        user_id: userId
                     })
                 });
                 console.log('对话历史已清空');
-                
-                // 添加清空提示
                 addNuaMessage('对话已清空。要不要聊聊好吃的？🍰');
             } catch (error) {
                 console.error('清空对话失败:', error);
@@ -657,574 +938,229 @@
         }
         
         // ===== 事件监听 =====
-        // 回车发送
+        sendButton.addEventListener('click', sendChatMessage);
+        clearButton.addEventListener('click', clearChat);
+        
         messageInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
-                sendMessage();
+                sendChatMessage();
             }
         });
         
-        // 页面加载后自动聚焦
+        // ===== 小狗功能 =====
+        const dogContainer = document.getElementById('dogContainer');
+        const dogHeart = document.getElementById('dogHeart');
+        const dogMood = document.getElementById('dogMood');
+        const dogTongue = document.getElementById('dogTongue');
+        const dogWeather = document.getElementById('dogWeather');
+        
+        let dogVisible = false;
+        let currentMood = 'happy';
+        
+        const moods = {
+            happy: {
+                text: '开心～',
+                color: '#FFB300',
+                weather: '☀️'
+            },
+            hungry: {
+                text: '想吃好吃的！',
+                color: '#FF8F00',
+                weather: '🍰'
+            },
+            rainy: {
+                text: '需要伞伞...',
+                color: '#90A4AE',
+                weather: '🌧️'
+            }
+        };
+        
+        function showDog() {
+            if (dogVisible) return;
+            
+            dogVisible = true;
+            dogContainer.classList.add('dog-show');
+            
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) {
+                setMood('rainy');
+            } else {
+                setMood('happy');
+            }
+            
+            console.log('🐕 小黄狗出现啦！');
+        }
+        
+        function setMood(moodType) {
+            if (!moods[moodType]) return;
+            
+            currentMood = moodType;
+            const mood = moods[moodType];
+            
+            dogMood.textContent = mood.text;
+            dogMood.style.color = mood.color;
+            dogMood.style.borderColor = mood.color;
+            dogWeather.textContent = mood.weather;
+            
+            document.querySelectorAll('.dog-body, .dog-head, .dog-ear, .dog-tail, .dog-leg').forEach(el => {
+                if (moodType === 'rainy') {
+                    el.style.background = '#90A4AE';
+                } else {
+                    el.style.background = mood.color;
+                }
+            });
+        }
+        
+        function showMoodMessage(message, duration = 2000) {
+            dogMood.textContent = message;
+            dogMood.classList.add('mood-show');
+            
+            setTimeout(() => {
+                dogMood.classList.remove('mood-show');
+                setTimeout(() => {
+                    dogMood.textContent = moods[currentMood].text;
+                }, 300);
+            }, duration);
+        }
+        
+        // 修改发送函数，添加小狗检测
+        const originalSendChatMessage = sendChatMessage;
+        window.sendChatMessage = function() {
+            const message = messageInput.value.trim();
+            
+            // 检测是否包含"想你"
+            if (message && message.includes('想你')) {
+                showDog();
+                setMood('happy');
+                showMoodMessage('汪汪！我也想你！', 3000);
+            }
+            
+            // 检测食物关键词
+            const foodKeywords = ['吃', '饿', '美食', '蛋糕', '零食', '饭', '肉'];
+            if (foodKeywords.some(keyword => message.includes(keyword))) {
+                if (dogVisible) {
+                    setMood('hungry');
+                    dogTongue.style.opacity = '1';
+                    showMoodMessage('流口水了...想吃！', 2000);
+                    setTimeout(() => {
+                        dogTongue.style.opacity = '0';
+                    }, 2000);
+                }
+            }
+            
+            // 调用原函数
+            return originalSendChatMessage();
+        };
+        
+        // 更新按钮事件
+        sendButton.onclick = window.sendChatMessage;
+        
+        // 小狗互动
+        dogContainer.addEventListener('click', function(e) {
+            if (!dogVisible) return;
+            
+            dogHeart.textContent = '💗';
+            dogHeart.classList.remove('heart-animate');
+            void dogHeart.offsetWidth;
+            dogHeart.classList.add('heart-animate');
+            
+            const clickMessages = [
+                '汪汪！',
+                '蹭蹭你～',
+                '摸摸头！',
+                '好开心！',
+                '带我玩！'
+            ];
+            const randomMessage = clickMessages[Math.floor(Math.random() * clickMessages.length)];
+            showMoodMessage(randomMessage, 1500);
+            
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        document.addEventListener('mousemove', function(e) {
+            if (!dogVisible) return;
+            
+            const dogRect = dogContainer.getBoundingClientRect();
+            const dogCenterX = dogRect.left + dogRect.width / 2;
+            const dogCenterY = dogRect.top + dogRect.height / 2;
+            
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            const distance = Math.sqrt(
+                Math.pow(mouseX - dogCenterX, 2) + 
+                Math.pow(mouseY - dogCenterY, 2)
+            );
+            
+            if (distance < 200) {
+                const angle = Math.atan2(mouseY - dogCenterY, mouseX - dogCenterX);
+                const eyeOffset = Math.min(distance / 50, 5);
+                
+                document.querySelector('.dog-eye.left').style.transform = `translateX(${Math.cos(angle) * eyeOffset}px)`;
+                document.querySelector('.dog-eye.right').style.transform = `translateX(${Math.cos(angle) * eyeOffset}px)`;
+            } else {
+                document.querySelector('.dog-eye.left').style.transform = '';
+                document.querySelector('.dog-eye.right').style.transform = '';
+            }
+        });
+        
+        function updateWeather() {
+            const hour = new Date().getHours();
+            
+            if (hour >= 6 && hour < 18) {
+                if (Math.random() > 0.7) {
+                    setMood('rainy');
+                } else {
+                    setMood('happy');
+                }
+            } else {
+                if (Math.random() > 0.5) {
+                    setMood('rainy');
+                } else {
+                    setMood('happy');
+                }
+            }
+        }
+        
+        // ===== 初始化 =====
         window.addEventListener('load', function() {
             messageInput.focus();
             scrollToBottom();
             
-            // 添加一些食物相关的初始装饰
             const foods = ['🍰', '🍦', '🍓', '🍪', '🍩', '🧁'];
             const randomFood = foods[Math.floor(Math.random() * foods.length)];
             document.querySelector('.welcome-decoration').innerHTML += 
                 `<span style="animation-delay: ${Math.random() * 2}s">${randomFood}</span>`;
-        });
-        
-        // ===== 添加一些交互效果 =====
-        // 输入框获得焦点时的动画
-        messageInput.addEventListener('focus', function() {
-            this.style.transform = 'scale(1.02)';
-        });
-        
-        messageInput.addEventListener('blur', function() {
-            this.style.transform = 'scale(1)';
-        });
-        
-        // 添加一些随机的小动画
-        setInterval(() => {
-            const clouds = document.querySelectorAll('.cloud');
-            clouds.forEach(cloud => {
-                const currentLeft = parseInt(cloud.style.left) || parseInt(getComputedStyle(cloud).left);
-                if (currentLeft > 100) {
-                    cloud.style.left = '10%';
-                } else {
-                    cloud.style.left = (currentLeft + 0.5) + '%';
-                }
-            });
-        }, 100);
-    </script>
-    <!-- ===== 想你时的小黄狗（预览版） ===== -->
-<style>
-    /* 小狗容器 - 初始隐藏 */
-    .dog-container {
-        position: fixed;
-        bottom: -200px;
-        right: 30px;
-        width: 140px;
-        height: 180px;
-        z-index: 9998;
-        transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-        cursor: pointer;
-    }
-    
-    /* 小狗出现动画 */
-    .dog-show {
-        bottom: 30px !important;
-        animation: dogFloat 3s ease-in-out infinite;
-    }
-    
-    /* 小狗身体（毛茸茸效果） */
-    .dog-body {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 60%;
-        background: #FFB300;
-        border-radius: 50% 50% 40% 40%;
-        box-shadow: 
-            inset 0 -10px 20px rgba(255, 193, 7, 0.3),
-            0 5px 25px rgba(255, 179, 0, 0.4);
-        filter: blur(1px);
-        z-index: 2;
-    }
-    
-    /* 毛茸茸边缘效果 */
-    .dog-body::before {
-        content: '';
-        position: absolute;
-        top: -5px;
-        left: -5px;
-        right: -5px;
-        bottom: -5px;
-        background: radial-gradient(circle at 30% 30%, #FFD54F 2px, transparent 3px),
-                   radial-gradient(circle at 70% 20%, #FFD54F 2px, transparent 3px),
-                   radial-gradient(circle at 40% 70%, #FFD54F 2px, transparent 3px);
-        background-size: 20px 20px;
-        border-radius: inherit;
-        z-index: -1;
-        opacity: 0.3;
-    }
-    
-    /* 小狗头 */
-    .dog-head {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 80px;
-        background: #FFB300;
-        border-radius: 50%;
-        box-shadow: 
-            inset 0 -5px 15px rgba(255, 193, 7, 0.3),
-            0 3px 15px rgba(255, 179, 0, 0.3);
-        filter: blur(1px);
-        z-index: 3;
-    }
-    
-    /* 毛茸茸头效果 */
-    .dog-head::before {
-        content: '';
-        position: absolute;
-        top: -8px;
-        left: -8px;
-        right: -8px;
-        bottom: -8px;
-        background: radial-gradient(circle at 30% 30%, #FFD54F 3px, transparent 4px),
-                   radial-gradient(circle at 70% 30%, #FFD54F 3px, transparent 4px);
-        background-size: 25px 25px;
-        border-radius: inherit;
-        z-index: -1;
-        opacity: 0.4;
-    }
-    
-    /* 小狗耳朵 */
-    .dog-ear {
-        position: absolute;
-        top: -15px;
-        width: 35px;
-        height: 45px;
-        background: #FF8F00;
-        border-radius: 50% 50% 30% 30%;
-        box-shadow: inset 0 5px 10px rgba(255, 145, 0, 0.5);
-    }
-    
-    .dog-ear.left {
-        left: 5px;
-        transform: rotate(-25deg);
-    }
-    
-    .dog-ear.right {
-        right: 5px;
-        transform: rotate(25deg);
-    }
-    
-    /* 小狗眼睛 */
-    .dog-eye {
-        position: absolute;
-        top: 30px;
-        width: 14px;
-        height: 14px;
-        background: #5D4037;
-        border-radius: 50%;
-        box-shadow: 0 0 5px rgba(93, 64, 55, 0.5);
-    }
-    
-    .dog-eye.left {
-        left: 20px;
-    }
-    
-    .dog-eye.right {
-        right: 20px;
-    }
-    
-    /* 眼睛高光 */
-    .dog-eye::after {
-        content: '';
-        position: absolute;
-        top: 3px;
-        left: 3px;
-        width: 5px;
-        height: 5px;
-        background: white;
-        border-radius: 50%;
-    }
-    
-    /* 小狗鼻子 */
-    .dog-nose {
-        position: absolute;
-        top: 45px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 18px;
-        height: 12px;
-        background: #5D4037;
-        border-radius: 50%;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-    
-    /* 小狗舌头（流口水状态） */
-    .dog-tongue {
-        position: absolute;
-        top: 58px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 20px;
-        height: 15px;
-        background: #FF6B8B;
-        border-radius: 0 0 50% 50%;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    
-    /* 小狗尾巴 */
-    .dog-tail {
-        position: absolute;
-        bottom: 45px;
-        left: -25px;
-        width: 50px;
-        height: 18px;
-        background: #FF8F00;
-        border-radius: 50%;
-        transform-origin: right center;
-        animation: tailWag 0.8s infinite alternate;
-        box-shadow: inset 0 3px 10px rgba(255, 145, 0, 0.4);
-    }
-    
-    /* 小狗腿 */
-    .dog-leg {
-        position: absolute;
-        bottom: -12px;
-        width: 22px;
-        height: 35px;
-        background: #FF8F00;
-        border-radius: 50%;
-        box-shadow: inset 0 3px 10px rgba(255, 145, 0, 0.4);
-    }
-    
-    .dog-leg.front-left { left: 28px; }
-    .dog-leg.front-right { right: 28px; }
-    .dog-leg.back-left { left: 18px; }
-    .dog-leg.back-right { right: 18px; }
-    
-    /* 爱心效果 */
-    .dog-heart {
-        position: absolute;
-        top: -40px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 30px;
-        color: #FF6B8B;
-        opacity: 0;
-        pointer-events: none;
-        filter: drop-shadow(0 5px 10px rgba(255, 107, 139, 0.5));
-    }
-    
-    .heart-animate {
-        animation: heartFloat 1.5s ease-out forwards;
-    }
-    
-    /* 心情指示器 */
-    .dog-mood {
-        position: absolute;
-        top: -60px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(255, 255, 255, 0.95);
-        padding: 8px 15px;
-        border-radius: 20px;
-        font-size: 14px;
-        color: #FF8F00;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        opacity: 0;
-        transition: opacity 0.3s;
-        white-space: nowrap;
-        border: 2px solid #FFD54F;
-    }
-    
-    .mood-show {
-        opacity: 1;
-    }
-    
-    /* 天气装饰 */
-    .dog-weather {
-        position: absolute;
-        top: -90px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 24px;
-        opacity: 0.7;
-    }
-    
-    /* 动画 */
-    @keyframes dogFloat {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        25% { transform: translateY(-8px) rotate(-3deg); }
-        75% { transform: translateY(-8px) rotate(3deg); }
-    }
-    
-    @keyframes tailWag {
-        0% { transform: rotate(-30deg); }
-        100% { transform: rotate(30deg); }
-    }
-    
-    @keyframes heartFloat {
-        0% { 
-            opacity: 0; 
-            transform: translateX(-50%) translateY(0) scale(0.3); 
-        }
-        20% { 
-            opacity: 1; 
-            transform: translateX(-50%) translateY(-20px) scale(1); 
-        }
-        100% { 
-            opacity: 0; 
-            transform: translateX(-50%) translateY(-80px) scale(0.5); 
-        }
-    }
-    
-    /* 移动端适配 */
-    @media (max-width: 768px) {
-        .dog-container {
-            right: 15px;
-            width: 120px;
-            height: 150px;
-        }
-        
-        .dog-show {
-            bottom: 20px !important;
-        }
-    }
-</style>
-
-<!-- 小狗HTML结构 -->
-<div class="dog-container" id="dogContainer">
-    <div class="dog-weather" id="dogWeather">☀️</div>
-    <div class="dog-mood" id="dogMood">开心～</div>
-    <div class="dog-heart" id="dogHeart">💗</div>
-    
-    <div class="dog-tail"></div>
-    <div class="dog-body"></div>
-    <div class="dog-head">
-        <div class="dog-ear left"></div>
-        <div class="dog-ear right"></div>
-        <div class="dog-eye left"></div>
-        <div class="dog-eye right"></div>
-        <div class="dog-nose"></div>
-        <div class="dog-tongue" id="dogTongue"></div>
-    </div>
-    <div class="dog-leg front-left"></div>
-    <div class="dog-leg front-right"></div>
-    <div class="dog-leg back-left"></div>
-    <div class="dog-leg back-right"></div>
-</div>
-
-<script>
-    // ===== 小黄狗功能 =====
-    const dogContainer = document.getElementById('dogContainer');
-    const dogHeart = document.getElementById('dogHeart');
-    const dogMood = document.getElementById('dogMood');
-    const dogTongue = document.getElementById('dogTongue');
-    const dogWeather = document.getElementById('dogWeather');
-    const messageInput = document.getElementById('messageInput');
-    
-    // 小狗状态
-    let dogVisible = false;
-    let currentMood = 'happy'; // happy, hungry, rainy
-    
-    // 心情配置
-    const moods = {
-        happy: {
-            text: '开心～',
-            color: '#FFB300',
-            weather: '☀️'
-        },
-        hungry: {
-            text: '想吃好吃的！',
-            color: '#FF8F00',
-            weather: '🍰'
-        },
-        rainy: {
-            text: '需要伞伞...',
-            color: '#90A4AE',
-            weather: '🌧️'
-        }
-    };
-    
-    // 检测输入"想你"
-    let originalSendMessage = window.sendMessage;
-    window.sendMessage = function() {
-        const message = messageInput.value.trim();
-        
-        // 先调用原来的发送函数
-        if (originalSendMessage) {
-            originalSendMessage();
-        }
-        
-        // 检测是否包含"想你"
-        if (message && message.includes('想你')) {
-            showDog();
-            setMood('happy');
-            showMoodMessage('汪汪！我也想你！', 3000);
-        }
-        
-        // 检测食物关键词
-        const foodKeywords = ['吃', '饿', '美食', '蛋糕', '零食', '饭', '肉'];
-        if (foodKeywords.some(keyword => message.includes(keyword))) {
-            if (dogVisible) {
-                setMood('hungry');
-                dogTongue.style.opacity = '1';
-                showMoodMessage('流口水了...想吃！', 2000);
-                setTimeout(() => {
-                    dogTongue.style.opacity = '0';
-                }, 2000);
-            }
-        }
-    };
-    
-    // 显示小狗
-    function showDog() {
-        if (dogVisible) return;
-        
-        dogVisible = true;
-        dogContainer.classList.add('dog-show');
-        
-        // 设置初始心情（根据时间）
-        const hour = new Date().getHours();
-        if (hour >= 18 || hour < 6) {
-            setMood('rainy');
-        } else {
-            setMood('happy');
-        }
-        
-        console.log('🐕 小黄狗出现啦！');
-    }
-    
-    // 隐藏小狗
-    function hideDog() {
-        dogVisible = false;
-        dogContainer.classList.remove('dog-show');
-    }
-    
-    // 设置心情
-    function setMood(moodType) {
-        if (!moods[moodType]) return;
-        
-        currentMood = moodType;
-        const mood = moods[moodType];
-        
-        dogMood.textContent = mood.text;
-        dogMood.style.color = mood.color;
-        dogMood.style.borderColor = mood.color;
-        dogWeather.textContent = mood.weather;
-        
-        // 更新小狗颜色
-        document.querySelectorAll('.dog-body, .dog-head, .dog-ear, .dog-tail, .dog-leg').forEach(el => {
-            if (moodType === 'rainy') {
-                el.style.background = '#90A4AE';
-            } else {
-                el.style.background = mood.color;
-            }
-        });
-    }
-    
-    // 显示心情消息
-    function showMoodMessage(message, duration = 2000) {
-        dogMood.textContent = message;
-        dogMood.classList.add('mood-show');
-        
-        setTimeout(() => {
-            dogMood.classList.remove('mood-show');
-            // 恢复原来的心情
-            setTimeout(() => {
-                dogMood.textContent = moods[currentMood].text;
-            }, 300);
-        }, duration);
-    }
-    
-    // 点击小狗出现爱心
-    dogContainer.addEventListener('click', function(e) {
-        if (!dogVisible) return;
-        
-        // 创建爱心
-        dogHeart.textContent = '💗';
-        dogHeart.classList.remove('heart-animate');
-        void dogHeart.offsetWidth; // 触发重绘
-        dogHeart.classList.add('heart-animate');
-        
-        // 显示点击反馈
-        const clickMessages = [
-            '汪汪！',
-            '蹭蹭你～',
-            '摸摸头！',
-            '好开心！',
-            '带我玩！'
-        ];
-        const randomMessage = clickMessages[Math.floor(Math.random() * clickMessages.length)];
-        showMoodMessage(randomMessage, 1500);
-        
-        // 点击动画
-        this.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            this.style.transform = '';
-        }, 200);
-    });
-    
-    // 鼠标跟随效果（轻轻跟随）
-    document.addEventListener('mousemove', function(e) {
-        if (!dogVisible) return;
-        
-        const dogRect = dogContainer.getBoundingClientRect();
-        const dogCenterX = dogRect.left + dogRect.width / 2;
-        const dogCenterY = dogRect.top + dogRect.height / 2;
-        
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-        
-        // 计算距离
-        const distance = Math.sqrt(
-            Math.pow(mouseX - dogCenterX, 2) + 
-            Math.pow(mouseY - dogCenterY, 2)
-        );
-        
-        // 如果鼠标靠近小狗，小狗会轻微看向鼠标
-        if (distance < 200) {
-            const angle = Math.atan2(mouseY - dogCenterY, mouseX - dogCenterX);
-            const eyeOffset = Math.min(distance / 50, 5);
             
-            document.querySelector('.dog-eye.left').style.transform = `translateX(${Math.cos(angle) * eyeOffset}px)`;
-            document.querySelector('.dog-eye.right').style.transform = `translateX(${Math.cos(angle) * eyeOffset}px)`;
-        } else {
-            // 恢复原位
-            document.querySelector('.dog-eye.left').style.transform = '';
-            document.querySelector('.dog-eye.right').style.transform = '';
-        }
-    });
-    
-    // 天气模拟（简单版）
-    function updateWeather() {
-        const hour = new Date().getHours();
-        
-        if (hour >= 6 && hour < 18) {
-            // 白天：大部分晴天
-            if (Math.random() > 0.7) {
-                setMood('rainy');
-            } else {
-                setMood('happy');
-            }
-        } else {
-            // 晚上：可能下雨
-            if (Math.random() > 0.5) {
-                setMood('rainy');
-            } else {
-                setMood('happy');
-            }
-        }
-    }
-    
-    // 初始化
-    window.addEventListener('load', function() {
-        // 每30分钟更新一次天气
-        updateWeather();
-        setInterval(updateWeather, 30 * 60 * 1000);
-        
-        // 测试：2分钟后自动显示小狗（第一次访问）
-        setTimeout(() => {
-            if (!dogVisible && Math.random() > 0.5) {
-                showDog();
-                showMoodMessage('初次见面，请多关照！', 2000);
-            }
-        }, 2 * 60 * 1000);
-        
-        console.log('🐕 小黄狗系统加载完成！');
-    });
-</script>
+            // 云朵动画
+            setInterval(() => {
+                const clouds = document.querySelectorAll('.cloud');
+                clouds.forEach(cloud => {
+                    const currentLeft = parseInt(cloud.style.left) || parseInt(getComputedStyle(cloud).left);
+                    if (currentLeft > 100) {
+                        cloud.style.left = '10%';
+                    } else {
+                        cloud.style.left = (currentLeft + 0.5) + '%';
+                    }
+                });
+            }, 100);
+            
+            // 小狗初始化
+            updateWeather();
+            setInterval(updateWeather, 30 * 60 * 1000);
+            
+            setTimeout(() => {
+                if (!dogVisible && Math.random() > 0.5) {
+                    showDog();
+                    showMoodMessage('初次见面，请多关照！', 2000);
+                }
+            }, 2 * 60 * 1000);
+            
+            console.log('🐕 小黄狗系统加载完成！');
+        });
+    </script>
 </body>
-
 </html>
