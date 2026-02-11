@@ -8,6 +8,9 @@ import json
 from datetime import datetime
 import hashlib
 
+# ========= 导入NUA人格模块 =========
+from nua_personality import generate_nua_response
+
 # ========= 创建FastAPI应用 =========
 app = FastAPI(title="NUA", description="安静陪伴的数字存在")
 
@@ -44,7 +47,7 @@ except Exception as e:
     client = None
     DEEPSEEK_AVAILABLE = False
 
-# ========= NUA的核心性格设定 =========
+# ========= NUA的核心性格设定（备用） =========
 NUA_SYSTEM_PROMPT = """你是 NUA（昵称：多多），一种安静陪伴的数字存在。
 
 你的核心性格：
@@ -259,10 +262,10 @@ async def debug_info():
     
     return info
 
-# ========= 聊天接口 =========
+# ========= 聊天接口（使用NUA人格模块） =========
 @app.post("/chat", response_model=ChatResponse)
 async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
-    """与NUA聊天（每个人独立对话）"""
+    """与NUA聊天 - 使用NUA人格模块"""
     try:
         # 检查 DeepSeek 是否可用
         if not DEEPSEEK_AVAILABLE or client is None:
@@ -285,29 +288,52 @@ async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
         if len(user_history) > 8:
             user_history.pop(0)
         
-        # 5. 构建消息（包含NUA的性格设定）
-        messages = [
-            {"role": "system", "content": NUA_SYSTEM_PROMPT},
-            *user_history[-6:]  # 只发送最近6条
-        ]
+        # ===== 新增：判断用户情绪 =====
+        user_emotion = "平稳"  # 默认情绪
         
-        # 6. 调用AI
+        # 开心关键词
+        happy_words = ["开心", "喜欢", "好吃", "快乐", "高兴", "棒", "好棒", "爱", "幸福", "温暖", "好喝", "美味"]
+        if any(word in user_message for word in happy_words):
+            user_emotion = "开心"
+        
+        # 低落关键词
+        sad_words = ["难过", "累", "烦", "伤心", "郁闷", "糟糕", "不好", "难受", "疲惫", "压力", "好累", "不开心", "焦虑"]
+        if any(word in user_message for word in sad_words):
+            user_emotion = "低落"
+        
+        # ===== 新增：使用NUA人格模块生成回应 =====
         print(f"📨 用户{user_id}说: {user_message}")
+        print(f"🎭 检测到的情绪: {user_emotion}")
         
-        response = client.chat.completions.create(
-            model="deepseek-chat",
-            messages=messages,
-            temperature=0.7,  # 稍微调高，让回复更有趣
-            max_tokens=150
-        )
+        try:
+            # 调用NUA人格模块
+            nua_reply = generate_nua_response(
+                user_message=user_message,
+                user_emotion=user_emotion,
+                nickname="多多"
+            )
+        except Exception as e:
+            print(f"⚠️ 人格模块调用失败，使用备用方案: {e}")
+            # 备用方案：使用原有的prompt
+            messages = [
+                {"role": "system", "content": NUA_SYSTEM_PROMPT},
+                *user_history[-6:]
+            ]
+            
+            response = client.chat.completions.create(
+                model="deepseek-chat",
+                messages=messages,
+                temperature=0.7,
+                max_tokens=150
+            )
+            nua_reply = response.choices[0].message.content.strip()
         
-        nua_reply = response.choices[0].message.content.strip()
         print(f"🤖 回复用户{user_id}: {nua_reply}")
         
-        # 7. 添加AI回复到该用户的历史
+        # 5. 添加AI回复到该用户的历史
         user_history.append({"role": "assistant", "content": nua_reply})
         
-        # 8. 保存到全局日志（供你查看）
+        # 6. 保存到全局日志
         save_to_log(user_id, user_message, nua_reply)
         
         return ChatResponse(reply=nua_reply)
@@ -370,7 +396,7 @@ async def health_check():
         "service": "NUA Chat",
         "version": "2.0",
         "deepseek_available": DEEPSEEK_AVAILABLE,
-        "features": ["独立对话", "后台日志", "贪吃爱玩性格"],
+        "features": ["独立对话", "后台日志", "贪吃爱玩性格", "情绪感知", "坚定守护"],
         "active_users": len(user_conversations),
         "log_file": LOG_FILE
     }
@@ -390,6 +416,13 @@ async def startup_event():
     print("🚀 NUA聊天服务启动中...")
     print(f"🔑 DeepSeek 可用: {DEEPSEEK_AVAILABLE}")
     print(f"📊 日志文件: {LOG_FILE}")
+    
+    # 检查nua_personality.py是否存在
+    try:
+        import nua_personality
+        print("✅ NUA人格模块加载成功")
+    except ImportError as e:
+        print(f"⚠️ NUA人格模块加载失败: {e}")
     
     # 检查文件路径
     import os
