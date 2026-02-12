@@ -226,3 +226,81 @@ def generate_nua_response(user_id, user_message, user_conversations=None, force_
     
     save_user_memory(user_id, memory)
     return " ".join(response_parts[:2])
+# ========= 占卜系统 =========
+from divination.tarot import tarot_single, tarot_three
+from divination.iching import iching_divination
+from divination.light import light_divination
+from divination.api_divination import api_divination
+
+class DivinationController:
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.memory = load_user_memory(user_id)
+        
+        # 初始化占卜偏好
+        if "divination" not in self.memory:
+            self.memory["divination"] = {
+                "preferred_method": None,
+                "api_triggered": False,
+                "count": 0
+            }
+    
+    async def handle(self, method, params, user_question="", user_emotion="平稳"):
+        """处理占卜请求 - 规则优先，不满意升API"""
+        
+        # ===== 阶段1：规则库解读 =====
+        rule_result = None
+        if method == "塔罗" and len(params) == 1:
+            rule_result = tarot_single(params[0])
+        elif method == "塔罗" and len(params) == 3:
+            rule_result = tarot_three(params)
+        elif method == "梅花易数" and len(params) == 2:
+            rule_result = iching_divination(params[0], params[1])
+        elif method == "轻占卜" and len(params) == 2:
+            rule_result = light_divination(params[0], params[1])
+        
+        # ===== 阶段2：检查是否需要API升级 =====
+        need_api = False
+        pref = self.memory["divination"]
+        
+        # 情况1：规则库无解读
+        if not rule_result:
+            need_api = True
+            print(f"🔮 用户{self.user_id}：规则无解读，触发API")
+        
+        # 情况2：用户历史偏好API
+        if pref.get("api_triggered") and pref.get("preferred_method") == method:
+            need_api = True
+            print(f"🔮 用户{self.user_id}：历史偏好API，触发API")
+        
+        # ===== 阶段3：执行解读 =====
+        if need_api:
+            api_result = await api_divination(method, params, user_question, user_emotion)
+            if api_result:
+                # 记录API触发
+                pref["api_triggered"] = True
+                pref["preferred_method"] = method
+                pref["count"] += 1
+                save_user_memory(self.user_id, self.memory)
+                return api_result, True
+        
+        # 返回规则解读
+        pref["count"] += 1
+        save_user_memory(self.user_id, self.memory)
+        return rule_result or "今天玩点别的吧～", False
+    
+    def feedback(self, accurate):
+        """用户反馈处理 - 核心机制！"""
+        pref = self.memory["divination"]
+        
+        if not accurate:
+            # 用户说不准 → 下次自动升API
+            pref["api_triggered"] = True
+            pref["preferred_method"] = pref.get("preferred_method")
+            print(f"📝 用户{self.user_id}反馈不准，下次将使用API")
+        else:
+            # 用户说准 → 巩固当前模式
+            pref["api_triggered"] = False
+            print(f"📝 用户{self.user_id}反馈准，保持规则模式")
+        
+        save_user_memory(self.user_id, self.memory)
