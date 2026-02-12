@@ -68,7 +68,11 @@ LOG_FILE = "nua_chat_logs.jsonl"
 class ChatRequest(BaseModel):
     message: str
     user_id: str = ""
-
+    # ===== 🌍 新增时区字段 =====
+    timezone: str = "Asia/Shanghai"  # 用户时区名称，默认北京时间
+    timezone_offset: int = 8         # 用户时区偏移（小时），默认+8
+    local_time: str = ""            # 用户当地时间（HH:MM:SS）
+    local_date: str = ""            # 用户本地日期（YYYY-MM-DD）
 class ChatResponse(BaseModel):
     reply: str
 
@@ -273,3 +277,4 @@ async def startup_event():
     print("🚀 NUA聊天服务启动中...")
     print(f"🔑 DeepSeek 可用: {DEEPSEEK_AVAILABLE}")
     print("✅ 服务启动完成！")
+
