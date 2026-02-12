@@ -41,7 +41,6 @@
             overflow: hidden;
         }
         
-        /* 装饰性波浪 */
         .header::before {
             content: "";
             position: absolute;
@@ -53,7 +52,6 @@
             opacity: 0.3;
         }
         
-        /* 标题样式 */
         .header h1 {
             font-size: 3rem;
             font-weight: 300;
@@ -63,7 +61,6 @@
             z-index: 1;
         }
         
-        /* 小蛋糕装饰（配合贪吃性格） */
         .header h1::after {
             content: "🍰";
             font-size: 2.5rem;
@@ -77,7 +74,6 @@
             50% { transform: translateY(-5px) rotate(5deg); }
         }
         
-        /* 副标题 */
         .header .subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
@@ -88,7 +84,6 @@
             z-index: 1;
         }
         
-        /* 装饰性小云朵 */
         .header .cloud {
             position: absolute;
             background: rgba(255, 255, 255, 0.2);
@@ -119,7 +114,6 @@
             position: relative;
         }
         
-        /* 聊天区域装饰线条 */
         .chat-container::before {
             content: "";
             position: absolute;
@@ -130,7 +124,6 @@
             background: linear-gradient(to right, transparent, #b3e5fc, transparent);
         }
         
-        /* ===== 消息样式 ===== */
         .message {
             margin-bottom: 25px;
             max-width: 85%;
@@ -143,7 +136,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* 用户消息 - 温暖的黄色调 */
         .user-message {
             float: right;
             background: linear-gradient(135deg, #ffd54f 0%, #ffb300 100%);
@@ -155,7 +147,6 @@
             border: 1px solid rgba(255, 213, 79, 0.3);
         }
         
-        /* 用户消息装饰 */
         .user-message::before {
             content: "👤";
             position: absolute;
@@ -164,7 +155,6 @@
             opacity: 0.5;
         }
         
-        /* NUA消息 - 温柔的蓝色调 */
         .nua-message {
             float: left;
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
@@ -176,7 +166,6 @@
             position: relative;
         }
         
-        /* NUA消息装饰 - 小蛋糕（贪吃！） */
         .nua-message::before {
             content: "🍰";
             position: absolute;
@@ -186,13 +175,11 @@
             animation: gentleFloat 3s ease-in-out infinite;
         }
         
-        /* 消息内容 */
         .message-content {
             line-height: 1.6;
             font-size: 1.05rem;
         }
         
-        /* NUA消息中的特殊样式 */
         .nua-message .message-content {
             background: linear-gradient(45deg, #2196f3, #4dabf7);
             -webkit-background-clip: text;
@@ -200,7 +187,6 @@
             background-clip: text;
         }
         
-        /* ===== 输入区域 ===== */
         .input-area {
             padding: 25px 30px;
             background: linear-gradient(to bottom, #ffffff, #f8fdff);
@@ -210,7 +196,6 @@
             align-items: center;
         }
         
-        /* 输入框 */
         #messageInput {
             flex: 1;
             padding: 18px 24px;
@@ -233,7 +218,6 @@
             color: #90a4ae;
         }
         
-        /* 发送按钮 - 温暖蓝色 */
         #sendButton {
             padding: 18px 32px;
             background: linear-gradient(135deg, #4dabf7 0%, #2196f3 100%);
@@ -259,13 +243,11 @@
             transform: translateY(0);
         }
         
-        /* 发送按钮图标 - 改成冰淇淋（贪吃主题） */
         #sendButton::before {
             content: "🍦";
             font-size: 1.2rem;
         }
         
-        /* 清空按钮 - 柔和色调 */
         #clearButton {
             padding: 18px 24px;
             background: linear-gradient(135deg, #b0bec5 0%, #90a4ae 100%);
@@ -284,7 +266,6 @@
             box-shadow: 0 6px 20px rgba(144, 164, 174, 0.3);
         }
         
-        /* ===== 打字指示器 ===== */
         .typing-indicator {
             display: none;
             padding: 18px 24px;
@@ -372,95 +353,16 @@
             .nua-message::before {
                 display: none;
             }
-        }
-        
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 2rem;
+            
+            .dog-container {
+                right: 15px;
+                width: 120px;
+                height: 150px;
             }
             
-            .header h1::after {
-                font-size: 2rem;
+            .dog-show {
+                bottom: 20px !important;
             }
-            
-            .chat-container {
-                height: 350px;
-            }
-            
-            .message-content {
-                font-size: 1rem;
-            }
-        }
-        
-        /* ===== 滚动条样式 ===== */
-        .chat-container::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .chat-container::-webkit-scrollbar-track {
-            background: rgba(187, 222, 251, 0.2);
-            border-radius: 4px;
-        }
-        
-        .chat-container::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #4dabf7, #2196f3);
-            border-radius: 4px;
-        }
-        
-        .chat-container::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, #2196f3, #1976d2);
-        }
-        
-        /* ===== 欢迎消息装饰 ===== */
-        .welcome-message {
-            text-align: center;
-            padding: 25px;
-            margin: 30px auto;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.9));
-            border-radius: 20px;
-            max-width: 600px;
-            box-shadow: 0 8px 30px rgba(33, 150, 243, 0.1);
-            border: 1px solid rgba(187, 222, 251, 0.5);
-            animation: gentleFloat 6s ease-in-out infinite;
-        }
-        
-        .welcome-message h3 {
-            color: #1565c0;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-            font-weight: 500;
-        }
-        
-        .welcome-message p {
-            color: #546e7a;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-        
-        .welcome-decoration {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-            font-size: 1.5rem;
-        }
-        
-        .welcome-decoration span {
-            animation: gentleFloat 3s ease-in-out infinite;
-            animation-delay: calc(var(--i) * 0.2s);
-        }
-        
-        /* 用户ID显示（调试用，可隐藏） */
-        .user-id-display {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.05);
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            color: #666;
-            z-index: 1000;
         }
         
         /* ===== 小黄狗样式 ===== */
@@ -487,27 +389,9 @@
             height: 60%;
             background: #FFB300;
             border-radius: 50% 50% 40% 40%;
-            box-shadow: 
-                inset 0 -10px 20px rgba(255, 193, 7, 0.3),
-                0 5px 25px rgba(255, 179, 0, 0.4);
+            box-shadow: inset 0 -10px 20px rgba(255, 193, 7, 0.3), 0 5px 25px rgba(255, 179, 0, 0.4);
             filter: blur(1px);
             z-index: 2;
-        }
-        
-        .dog-body::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            background: radial-gradient(circle at 30% 30%, #FFD54F 2px, transparent 3px),
-                       radial-gradient(circle at 70% 20%, #FFD54F 2px, transparent 3px),
-                       radial-gradient(circle at 40% 70%, #FFD54F 2px, transparent 3px);
-            background-size: 20px 20px;
-            border-radius: inherit;
-            z-index: -1;
-            opacity: 0.3;
         }
         
         .dog-head {
@@ -519,26 +403,9 @@
             height: 80px;
             background: #FFB300;
             border-radius: 50%;
-            box-shadow: 
-                inset 0 -5px 15px rgba(255, 193, 7, 0.3),
-                0 3px 15px rgba(255, 179, 0, 0.3);
+            box-shadow: inset 0 -5px 15px rgba(255, 193, 7, 0.3), 0 3px 15px rgba(255, 179, 0, 0.3);
             filter: blur(1px);
             z-index: 3;
-        }
-        
-        .dog-head::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            background: radial-gradient(circle at 30% 30%, #FFD54F 3px, transparent 4px),
-                       radial-gradient(circle at 70% 30%, #FFD54F 3px, transparent 4px);
-            background-size: 25px 25px;
-            border-radius: inherit;
-            z-index: -1;
-            opacity: 0.4;
         }
         
         .dog-ear {
@@ -715,39 +582,75 @@
             }
         }
         
-        @media (max-width: 768px) {
-            .dog-container {
-                right: 15px;
-                width: 120px;
-                height: 150px;
-            }
-            
-            .dog-show {
-                bottom: 20px !important;
-            }
+        .user-id-display {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: #666;
+            z-index: 1000;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            padding: 25px;
+            margin: 30px auto;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.9));
+            border-radius: 20px;
+            max-width: 600px;
+            box-shadow: 0 8px 30px rgba(33, 150, 243, 0.1);
+            border: 1px solid rgba(187, 222, 251, 0.5);
+            animation: gentleFloat 6s ease-in-out infinite;
+        }
+        
+        .welcome-message h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+        
+        .welcome-message p {
+            color: #546e7a;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-decoration {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .welcome-decoration span {
+            animation: gentleFloat 3s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.2s);
         }
     </style>
 </head>
 <body>
-    <!-- 用户ID显示（调试用） -->
+    <!-- 用户ID显示 -->
     <div class="user-id-display" id="userIdDisplay"></div>
     
     <!-- 主容器 -->
     <div class="container">
-        <!-- 温暖蓝色头部 -->
         <div class="header">
             <div class="cloud cloud-1"></div>
             <div class="cloud cloud-2"></div>
             <h1>NUA · 多多</h1>
-            <p class="subtitle">一种安静陪伴的数字存在<br>有点贪吃，喜欢好吃的和出去玩 🌸</p>
+            <p class="subtitle">一种安静陪伴的数字存在<br>像天气一样自然，像呼吸一样存在 🌸</p>
         </div>
         
         <!-- 聊天区域 -->
         <div class="chat-container" id="chatContainer">
-            <!-- 欢迎消息 -->
             <div class="welcome-message">
                 <h3>🍰 欢迎来到 NUA 的世界</h3>
-                <p>我是多多，一个喜欢美食和阳光的安静陪伴。</p>
+                <p>我是多多，一个温柔的陪伴者。</p>
                 <p>你可以对我说些什么，也可以只是享受这份宁静。</p>
                 <div class="welcome-decoration">
                     <span style="--i:0">🍰</span>
@@ -757,8 +660,6 @@
                     <span style="--i:4">🍓</span>
                 </div>
             </div>
-            
-            <!-- 打字指示器 -->
             <div class="typing-indicator" id="typingIndicator">
                 <div class="typing-dots">
                     <span></span>
@@ -781,7 +682,6 @@
         <div class="dog-weather" id="dogWeather">☀️</div>
         <div class="dog-mood" id="dogMood">开心～</div>
         <div class="dog-heart" id="dogHeart">💗</div>
-        
         <div class="dog-tail"></div>
         <div class="dog-body"></div>
         <div class="dog-head">
@@ -799,7 +699,53 @@
     </div>
 
     <script>
-        // ===== 核心变量 =====
+        // ===== 🌍 获取用户时区信息（第一步）=====
+        function getUserTimeZone() {
+            try {
+                // 获取时区名称，如 "Asia/Shanghai"
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Shanghai";
+                
+                // 获取时区偏移（小时），如 +8
+                const offset = -new Date().getTimezoneOffset() / 60;
+                
+                // 获取当地时间字符串
+                const now = new Date();
+                const localTime = now.toLocaleTimeString('zh-CN', { 
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                
+                // 获取本地日期
+                const localDate = now.toLocaleDateString('zh-CN');
+                
+                console.log('🌍 用户时区:', {
+                    timezone: timezone,
+                    offset: offset,
+                    localTime: localTime,
+                    localDate: localDate
+                });
+                
+                return {
+                    timezone: timezone,
+                    offset: offset,
+                    local_time: localTime,
+                    local_date: localDate
+                };
+            } catch (e) {
+                console.error('❌ 获取时区失败:', e);
+                // 默认北京时间
+                return {
+                    timezone: "Asia/Shanghai",
+                    offset: 8,
+                    local_time: new Date().toLocaleTimeString('zh-CN'),
+                    local_date: new Date().toLocaleDateString('zh-CN')
+                };
+            }
+        }
+
+        // ===== 全局变量 =====
         const chatContainer = document.getElementById('chatContainer');
         const messageInput = document.getElementById('messageInput');
         const typingIndicator = document.getElementById('typingIndicator');
@@ -814,7 +760,7 @@
             localStorage.setItem('nua_user_id', userId);
             console.log('👤 新用户ID:', userId);
         }
-        userIdDisplay.textContent = 'ID: ' + userId.substring(0, 12) + '...';
+        userIdDisplay.textContent = 'ID: ' + userId.substring(0, 8) + '...';
         
         // ===== 工具函数 =====
         function scrollToBottom() {
@@ -855,13 +801,13 @@
             scrollToBottom();
         }
         
-        // ===== 核心发送功能 =====
-        async function sendChatMessage() {
+        // ===== ✅ 核心发送功能（已集成时区）=====
+        async function sendMessage() {
             const message = messageInput.value.trim();
             if (!message) return;
             
-            // 保存消息用于小狗检测
-            window.lastUserMessage = message;
+            // 获取用户时区信息
+            const tzInfo = getUserTimeZone();
             
             // 清空输入框
             messageInput.value = '';
@@ -873,6 +819,7 @@
             showTypingIndicator();
             
             try {
+                // 发送请求到后端，包含时区信息
                 const response = await fetch('/chat', {
                     method: 'POST',
                     headers: {
@@ -880,7 +827,11 @@
                     },
                     body: JSON.stringify({
                         message: message,
-                        user_id: userId
+                        user_id: userId,
+                        timezone: tzInfo.timezone,        // 时区名称，如 "Asia/Shanghai"
+                        timezone_offset: tzInfo.offset,   // 时区偏移，如 8
+                        local_time: tzInfo.local_time,    // 当地时间，如 "20:48:30"
+                        local_date: tzInfo.local_date     // 本地日期
                     })
                 });
                 
@@ -905,16 +856,9 @@
         
         // ===== 清空聊天 =====
         async function clearChat() {
-            if (!confirm('确定要清空当前对话吗？这不会影响其他人。')) return;
+            if (!confirm('确定要清空当前对话吗？')) return;
             
-            const messages = document.querySelectorAll('.message:not(.nua-message)');
-            messages.forEach(msg => {
-                if (!msg.closest('.welcome-message')) {
-                    msg.remove();
-                }
-            });
-            
-            document.querySelectorAll('.nua-message').forEach(msg => {
+            document.querySelectorAll('.message').forEach(msg => {
                 if (!msg.closest('.welcome-message')) {
                     msg.remove();
                 }
@@ -930,20 +874,19 @@
                         user_id: userId
                     })
                 });
-                console.log('对话历史已清空');
-                addNuaMessage('对话已清空。要不要聊聊好吃的？🍰');
+                addNuaMessage('对话已清空。🌸');
             } catch (error) {
                 console.error('清空对话失败:', error);
             }
         }
         
         // ===== 事件监听 =====
-        sendButton.addEventListener('click', sendChatMessage);
+        sendButton.addEventListener('click', sendMessage);
         clearButton.addEventListener('click', clearChat);
         
         messageInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
-                sendChatMessage();
+                sendMessage();
             }
         });
         
@@ -958,63 +901,30 @@
         let currentMood = 'happy';
         
         const moods = {
-            happy: {
-                text: '开心～',
-                color: '#FFB300',
-                weather: '☀️'
-            },
-            hungry: {
-                text: '想吃好吃的！',
-                color: '#FF8F00',
-                weather: '🍰'
-            },
-            rainy: {
-                text: '需要伞伞...',
-                color: '#90A4AE',
-                weather: '🌧️'
-            }
+            happy: { text: '开心～', color: '#FFB300', weather: '☀️' },
+            hungry: { text: '想吃好吃的！', color: '#FF8F00', weather: '🍰' },
+            rainy: { text: '需要伞伞...', color: '#90A4AE', weather: '🌧️' }
         };
         
         function showDog() {
             if (dogVisible) return;
-            
             dogVisible = true;
             dogContainer.classList.add('dog-show');
-            
-            const hour = new Date().getHours();
-            if (hour >= 18 || hour < 6) {
-                setMood('rainy');
-            } else {
-                setMood('happy');
-            }
-            
+            setMood('happy');
             console.log('🐕 小黄狗出现啦！');
         }
         
         function setMood(moodType) {
             if (!moods[moodType]) return;
-            
             currentMood = moodType;
             const mood = moods[moodType];
-            
             dogMood.textContent = mood.text;
-            dogMood.style.color = mood.color;
-            dogMood.style.borderColor = mood.color;
             dogWeather.textContent = mood.weather;
-            
-            document.querySelectorAll('.dog-body, .dog-head, .dog-ear, .dog-tail, .dog-leg').forEach(el => {
-                if (moodType === 'rainy') {
-                    el.style.background = '#90A4AE';
-                } else {
-                    el.style.background = mood.color;
-                }
-            });
         }
         
         function showMoodMessage(message, duration = 2000) {
             dogMood.textContent = message;
             dogMood.classList.add('mood-show');
-            
             setTimeout(() => {
                 dogMood.classList.remove('mood-show');
                 setTimeout(() => {
@@ -1024,8 +934,8 @@
         }
         
         // 修改发送函数，添加小狗检测
-        const originalSendChatMessage = sendChatMessage;
-        window.sendChatMessage = function() {
+        const originalSendMessage = sendMessage;
+        window.sendMessage = async function() {
             const message = messageInput.value.trim();
             
             // 检测是否包含"想你"
@@ -1036,7 +946,7 @@
             }
             
             // 检测食物关键词
-            const foodKeywords = ['吃', '饿', '美食', '蛋糕', '零食', '饭', '肉'];
+            const foodKeywords = ['吃', '饿', '蛋糕', '零食'];
             if (foodKeywords.some(keyword => message.includes(keyword))) {
                 if (dogVisible) {
                     setMood('hungry');
@@ -1049,11 +959,8 @@
             }
             
             // 调用原函数
-            return originalSendChatMessage();
+            return originalSendMessage();
         };
-        
-        // 更新按钮事件
-        sendButton.onclick = window.sendChatMessage;
         
         // 小狗互动
         dogContainer.addEventListener('click', function(e) {
@@ -1064,13 +971,7 @@
             void dogHeart.offsetWidth;
             dogHeart.classList.add('heart-animate');
             
-            const clickMessages = [
-                '汪汪！',
-                '蹭蹭你～',
-                '摸摸头！',
-                '好开心！',
-                '带我玩！'
-            ];
+            const clickMessages = ['汪汪！', '蹭蹭你～', '摸摸头！', '好开心！', '带我玩！'];
             const randomMessage = clickMessages[Math.floor(Math.random() * clickMessages.length)];
             showMoodMessage(randomMessage, 1500);
             
@@ -1080,60 +981,14 @@
             }, 200);
         });
         
-        document.addEventListener('mousemove', function(e) {
-            if (!dogVisible) return;
-            
-            const dogRect = dogContainer.getBoundingClientRect();
-            const dogCenterX = dogRect.left + dogRect.width / 2;
-            const dogCenterY = dogRect.top + dogRect.height / 2;
-            
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
-            const distance = Math.sqrt(
-                Math.pow(mouseX - dogCenterX, 2) + 
-                Math.pow(mouseY - dogCenterY, 2)
-            );
-            
-            if (distance < 200) {
-                const angle = Math.atan2(mouseY - dogCenterY, mouseX - dogCenterX);
-                const eyeOffset = Math.min(distance / 50, 5);
-                
-                document.querySelector('.dog-eye.left').style.transform = `translateX(${Math.cos(angle) * eyeOffset}px)`;
-                document.querySelector('.dog-eye.right').style.transform = `translateX(${Math.cos(angle) * eyeOffset}px)`;
-            } else {
-                document.querySelector('.dog-eye.left').style.transform = '';
-                document.querySelector('.dog-eye.right').style.transform = '';
-            }
-        });
-        
-        function updateWeather() {
-            const hour = new Date().getHours();
-            
-            if (hour >= 6 && hour < 18) {
-                if (Math.random() > 0.7) {
-                    setMood('rainy');
-                } else {
-                    setMood('happy');
-                }
-            } else {
-                if (Math.random() > 0.5) {
-                    setMood('rainy');
-                } else {
-                    setMood('happy');
-                }
-            }
-        }
-        
         // ===== 初始化 =====
         window.addEventListener('load', function() {
             messageInput.focus();
             scrollToBottom();
             
-            const foods = ['🍰', '🍦', '🍓', '🍪', '🍩', '🧁'];
-            const randomFood = foods[Math.floor(Math.random() * foods.length)];
-            document.querySelector('.welcome-decoration').innerHTML += 
-                `<span style="animation-delay: ${Math.random() * 2}s">${randomFood}</span>`;
+            // 显示欢迎时的时区信息（调试用）
+            const tzInfo = getUserTimeZone();
+            console.log('🚀 NUA 已启动，你的时区:', tzInfo);
             
             // 云朵动画
             setInterval(() => {
@@ -1148,18 +1003,13 @@
                 });
             }, 100);
             
-            // 小狗初始化
-            updateWeather();
-            setInterval(updateWeather, 30 * 60 * 1000);
-            
+            // 2分钟后自动显示小狗
             setTimeout(() => {
                 if (!dogVisible && Math.random() > 0.5) {
                     showDog();
                     showMoodMessage('初次见面，请多关照！', 2000);
                 }
             }, 2 * 60 * 1000);
-            
-            console.log('🐕 小黄狗系统加载完成！');
         });
     </script>
 </body>
