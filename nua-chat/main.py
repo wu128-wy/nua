@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, FileResponse
@@ -24,8 +23,8 @@ app.add_middleware(
 )
 
 # ========= 配置AI客户端 =========
-DEEPSEEK_AVAILABLE = False  # ✅ 先定义全局变量
-client = None  # ✅ 先定义全局变量
+DEEPSEEK_AVAILABLE = False
+client = None
 
 try:
     deepseek_api_key = os.getenv("DEEPSEEK_API_KEY", "")
@@ -64,21 +63,21 @@ user_conversations = {}
 # ========= 全局对话日志 =========
 LOG_FILE = "nua_chat_logs.jsonl"
 
-# ========= 请求和响应的数据结构 =========
+# ========= 🌍 请求和响应的数据结构（已集成时区）=========
 class ChatRequest(BaseModel):
     message: str
     user_id: str = ""
-    # ===== 🌍 新增时区字段 =====
-    timezone: str = "Asia/Shanghai"  # 用户时区名称，默认北京时间
-    timezone_offset: int = 8         # 用户时区偏移（小时），默认+8
+    # 时区信息（前端自动获取）
+    timezone: str = "Asia/Shanghai"  # 用户时区名称
+    timezone_offset: int = 8         # 用户时区偏移（小时）
     local_time: str = ""            # 用户当地时间（HH:MM:SS）
     local_date: str = ""            # 用户本地日期（YYYY-MM-DD）
+
 class ChatResponse(BaseModel):
     reply: str
 
-# ========= 占卜请求数据结构（✅ 已修复语法）=========
+# ========= 占卜请求数据结构 =========
 class DivinationRequest(BaseModel):
-    """占卜请求参数"""
     user_id: str
     method: str  # "塔罗", "梅花易数", "轻占卜"
     params: list  # [数字] 或 [颜色,数字]
@@ -97,7 +96,8 @@ def save_to_log(user_id: str, user_message: str, nua_reply: str):
         "timestamp": datetime.now().isoformat(),
         "user_id": user_id,
         "user_message": user_message,
-        "nua_reply": nua_reply
+        "nua_reply": nua_reply,
+        "timezone": None  # 将在调用时填充
     }
     try:
         with open(LOG_FILE, "a", encoding="utf-8") as f:
@@ -149,9 +149,10 @@ async def debug_info():
     }
     return info
 
-# ========= 聊天接口 =========
+# ========= 🌍 聊天接口（完整时区感知版）=========
 @app.post("/chat", response_model=ChatResponse)
 async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
+    """与NUA聊天 - 支持时区感知、记住名字、占卜反馈"""
     try:
         if not DEEPSEEK_AVAILABLE or client is None:
             return ChatResponse(reply="（多多正在休息，暂时无法聊天）")
@@ -168,6 +169,16 @@ async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
         if len(user_history) > 8:
             user_history.pop(0)
         
+        # ===== 用户记忆管理 =====
+        user_memory_file = f"user_memory_{user_id}.json"
+        user_memory = {}
+        try:
+            if os.path.exists(user_memory_file):
+                with open(user_memory_file, "r", encoding="utf-8") as f:
+                    user_memory = json.load(f)
+        except Exception as e:
+            print(f"⚠️ 读取用户记忆失败: {e}")
+        
         # ===== 处理占卜反馈 =====
         if "准" in user_message and "不准" not in user_message:
             dc = DivinationController(user_id)
@@ -176,20 +187,58 @@ async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
             dc = DivinationController(user_id)
             dc.feedback(False)
         
-        # ===== 调用NUA人格模块 =====
+        # ===== 🌍 调用NUA人格模块（传递时区信息）=====
         print(f"📨 用户{user_id}说: {user_message}")
+        print(f"🌍 用户时区: {request.timezone}, 偏移: {request.timezone_offset}, 当地时间: {request.local_time}")
         
         try:
             nua_reply = generate_nua_response(
                 user_id=user_id,
                 user_message=user_message,
-                user_conversations=user_conversations
+                user_conversations=user_conversations,
+                timezone=request.timezone,
+                timezone_offset=request.timezone_offset,
+                local_time_str=request.local_time
             )
+            
+            # 保存用户时区到记忆
+            user_memory["timezone"] = request.timezone
+            user_memory["timezone_offset"] = request.timezone_offset
+            user_memory["last_seen"] = datetime.now().isoformat()
+            
+            try:
+                with open(user_memory_file, "w", encoding="utf-8") as f:
+                    json.dump(user_memory, f, ensure_ascii=False, indent=2)
+                print(f"💾 保存用户{user_id}的记忆，时区: {request.timezone}")
+            except Exception as e:
+                print(f"⚠️ 保存用户记忆失败: {e}")
+                
         except Exception as e:
-            print(f"⚠️ 人格模块调用失败: {e}")
-            nua_reply = "我在听。"
+            print(f"⚠️ 人格模块调用失败，使用备用方案: {e}")
+            # 备用方案：使用简单的时区问候
+            from nua_personality import get_time_greeting
+            greeting, prefix = get_time_greeting(
+                request.timezone, 
+                request.timezone_offset, 
+                request.local_time
+            )
+            nua_reply = f"{prefix} {greeting}。我在听。"
         
         print(f"🤖 回复: {nua_reply}")
+        
+        # 更新日志中的时区信息
+        try:
+            with open(LOG_FILE, "r", encoding="utf-8") as f:
+                logs = f.readlines()
+            if logs:
+                last_log = json.loads(logs[-1])
+                if last_log.get("user_id") == user_id:
+                    last_log["timezone"] = request.timezone
+                    logs[-1] = json.dumps(last_log, ensure_ascii=False) + "\n"
+                    with open(LOG_FILE, "w", encoding="utf-8") as f:
+                        f.writelines(logs)
+        except:
+            pass
         
         user_history.append({"role": "assistant", "content": nua_reply})
         save_to_log(user_id, user_message, nua_reply)
@@ -198,9 +247,9 @@ async def chat_with_nua(request: ChatRequest, fastapi_request: Request):
         
     except Exception as e:
         print(f"❌ 聊天出错: {e}")
-        return ChatResponse(reply="（多多在这里）")
+        return ChatResponse(reply="🌸 我在这里。")
 
-# ========= 🔮 占卜接口（✅ 已修复语法）=========
+# ========= 🔮 占卜接口 =========
 @app.post("/divination")
 async def divination_handler(request: DivinationRequest):
     try:
@@ -248,15 +297,36 @@ async def view_logs():
             return {"message": "暂无日志"}
         with open(LOG_FILE, "r", encoding="utf-8") as f:
             logs = [json.loads(line) for line in f.readlines()]
-        return {"total_logs": len(logs), "logs": logs[-50:]}
+        return {
+            "total_logs": len(logs),
+            "logs": logs[-50:],
+            "timezone_stats": "时区信息已记录"
+        }
     except Exception as e:
         return {"error": str(e)}
 
 @app.get("/admin/users")
 async def list_users():
+    users_info = []
+    for user_id in user_conversations.keys():
+        memory_file = f"user_memory_{user_id}.json"
+        timezone = "未知"
+        if os.path.exists(memory_file):
+            try:
+                with open(memory_file, "r", encoding="utf-8") as f:
+                    memory = json.load(f)
+                    timezone = memory.get("timezone", "未知")
+            except:
+                pass
+        users_info.append({
+            "user_id": user_id,
+            "message_count": len(user_conversations.get(user_id, [])),
+            "timezone": timezone
+        })
+    
     return {
         "active_users": len(user_conversations),
-        "users": list(user_conversations.keys()),
+        "users": users_info
     }
 
 # ========= 健康检查 =========
@@ -265,10 +335,18 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "NUA Chat",
-        "version": "3.0",
+        "version": "3.1",
         "deepseek_available": DEEPSEEK_AVAILABLE,
-        "features": ["亲近模式 💗", "塔罗占卜 🎴", "梅花易数 ☯️", "轻占卜 🎲"],
+        "features": [
+            "亲近模式 💗",
+            "塔罗占卜 🎴",
+            "梅花易数 ☯️",
+            "轻占卜 🎲",
+            "时区感知 🌍",
+            "记住名字 💾"
+        ],
         "active_users": len(user_conversations),
+        "timezone_support": "每个用户独立时区"
     }
 
 # ========= 启动检查 =========
@@ -276,5 +354,31 @@ async def health_check():
 async def startup_event():
     print("🚀 NUA聊天服务启动中...")
     print(f"🔑 DeepSeek 可用: {DEEPSEEK_AVAILABLE}")
+    print("🌍 时区感知功能已启用 - 每个用户看到自己的当地时间")
+    print("💗 亲近模式已启用 - 回应'想你/爱你'")
+    print("🔮 占卜系统已启用 - 塔罗/梅花/轻占卜")
     print("✅ 服务启动完成！")
 
+# ========= 时区测试接口（可选）=========
+@app.get("/timezone-test")
+async def timezone_test():
+    """测试时区功能"""
+    from nua_personality import get_time_greeting
+    import pytz
+    
+    test_timezones = ["Asia/Shanghai", "America/New_York", "Europe/London", "Asia/Tokyo"]
+    results = {}
+    
+    for tz in test_timezones:
+        greeting, prefix = get_time_greeting(tz, None, None)
+        results[tz] = {
+            "greeting": greeting,
+            "prefix": prefix,
+            "local_time": datetime.now(pytz.timezone(tz)).strftime("%H:%M")
+        }
+    
+    return {
+        "server_utc_time": datetime.utcnow().strftime("%H:%M:%S"),
+        "beijing_time": (datetime.utcnow() + timedelta(hours=8)).strftime("%H:%M:%S"),
+        "test_results": results
+    }
